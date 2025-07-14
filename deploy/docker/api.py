@@ -88,10 +88,17 @@ async def handle_llm_qa(
 
     Answer:"""
 
+        # Debug API key loading
+        api_key_env_name = config["llm"].get("api_key_env", "")
+        api_token = os.environ.get(api_key_env_name, "")
+        logger.info(f"API key env name: {api_key_env_name}")
+        logger.info(f"API token loaded: {bool(api_token)}")
+        logger.info(f"API token length: {len(api_token) if api_token else 0}")
+        
         response = perform_completion_with_backoff(
             provider=config["llm"]["provider"],
             prompt_with_variables=prompt,
-            api_token=os.environ.get(config["llm"].get("api_key_env", ""))
+            api_token=api_token
         )
 
         return response.choices[0].message.content
@@ -117,8 +124,14 @@ async def process_llm_extraction(
         api_key = ""
         if "api_key" in config["llm"]:
             api_key = config["llm"]["api_key"]
+            logger.info(f"Using direct API key from config")
         else:
-            api_key = os.environ.get(config["llm"].get("api_key_env", None), "")
+            api_key_env_name = config["llm"].get("api_key_env", None)
+            api_key = os.environ.get(api_key_env_name, "")
+            logger.info(f"Using API key from env var: {api_key_env_name}")
+            logger.info(f"API key loaded: {bool(api_key)}")
+            logger.info(f"API key length: {len(api_key) if api_key else 0}")
+        
         llm_strategy = LLMExtractionStrategy(
             llm_config=LLMConfig(
                 provider=config["llm"]["provider"],

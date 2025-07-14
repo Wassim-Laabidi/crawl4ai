@@ -1,17 +1,25 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv('../../.llm.env')
 
 # Default provider, ONLY used when the extraction strategy is LLMExtractionStrategy
-DEFAULT_PROVIDER = "openai/gpt-4o"
-DEFAULT_PROVIDER_API_KEY = "OPENAI_API_KEY"
+# DEFAULT_PROVIDER = "openai/gpt-4o"
+# DEFAULT_PROVIDER_API_KEY = "OPENAI_API_KEY"
+# MODEL_REPO_BRANCH = "new-release-0.0.2"
+DEFAULT_PROVIDER = "deepseek/deepseek-chat"
+DEFAULT_PROVIDER_API_KEY = "DEEPSEEK_API_KEY"
 MODEL_REPO_BRANCH = "new-release-0.0.2"
 # Provider-model dictionary, ONLY used when the extraction strategy is LLMExtractionStrategy
 PROVIDER_MODELS = {
     "ollama/llama3": "no-token-needed",  # Any model from Ollama no need for API token
     "groq/llama3-70b-8192": os.getenv("GROQ_API_KEY"),
+    "deepseek/deepseek-reasoner": os.getenv("DEEPSEEK_API_KEY"),
+    "deepseek/deepseek-chat": os.getenv("DEEPSEEK_API_KEY"),
+    "ollama/deepseek-r1:1.5b": "no-token-needed",  # Any model from Ollama no need for API token
     "groq/llama3-8b-8192": os.getenv("GROQ_API_KEY"),
+    "meta-llama/llama-4-maverick-17b-128e-instruct": os.getenv("GROQ_API_KEY"),
+    "groq/deepseek-r1-distill-llama-70b": os.getenv("GROQ_API_KEY"),
     "openai/gpt-4o-mini": os.getenv("OPENAI_API_KEY"),
     "openai/gpt-4o": os.getenv("OPENAI_API_KEY"),
     "openai/o1-mini": os.getenv("OPENAI_API_KEY"),
@@ -105,8 +113,8 @@ DOWNLOAD_PAGE_TIMEOUT = 60000
 # Global user settings with descriptions and default values
 USER_SETTINGS = {
     "DEFAULT_LLM_PROVIDER": {
-        "default": "openai/gpt-4o",
-        "description": "Default LLM provider in 'company/model' format (e.g., 'openai/gpt-4o', 'anthropic/claude-3-sonnet')",
+        "default": "deepseek/deepseek-chat",
+        "description": "Default LLM provider in 'company/model' format (e.g., 'openai/gpt-4o', 'anthropic/claude-3-sonnet', 'deepseek/deepseek-chat')",
         "type": "string"
     },
     "DEFAULT_LLM_PROVIDER_TOKEN": {

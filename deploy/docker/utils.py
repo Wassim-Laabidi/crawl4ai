@@ -20,6 +20,29 @@ class FilterType(str, Enum):
 
 def load_config() -> Dict:
     """Load and return application configuration."""
+    # Load environment variables from .llm.env file first
+    from dotenv import load_dotenv
+    import os
+    
+    # Try to load from different possible locations
+    env_paths = [
+        Path(__file__).parent / ".llm.env",  # Same directory as utils.py (docker directory)
+        Path("/app/.llm.env"),  # Docker container root
+        Path(__file__).parent.parent.parent / ".llm.env",  # Root of crawl4ai project
+    ]
+    
+    env_loaded = False
+    for env_path in env_paths:
+        if env_path.exists():
+            load_dotenv(env_path)
+            env_loaded = True
+            break
+    
+    # If no .env file found, environment variables should be available via Docker --env-file
+    if not env_loaded:
+        # Docker should have loaded the env vars via --env-file .llm.env
+        pass
+    
     config_path = Path(__file__).parent / "config.yml"
     with open(config_path, "r") as config_file:
         return yaml.safe_load(config_file)
